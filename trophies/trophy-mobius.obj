@@ -1,5 +1,5 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 03.03.2017 22:42:24
+# File Created: 04.03.2017 09:12:39
 
 mtllib trophy-mobius.mtl
 
@@ -1835,7 +1835,7 @@ vt 0.9851 0.9701 0.0000
 # 297 texture coords
 
 g Trophy_Mobius
-usemtl Material__100
+usemtl Material__101
 f 1/1/1 194/2/2 240/3/3 
 f 240/3/4 210/4/5 1/1/6 
 f 194/2/7 195/5/8 241/29/9 
