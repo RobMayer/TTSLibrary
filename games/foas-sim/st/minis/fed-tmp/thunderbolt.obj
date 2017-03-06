@@ -1,5 +1,5 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 05.03.2017 19:45:54
+# File Created: 05.03.2017 19:47:39
 
 mtllib thunderbolt.mtl
 
@@ -3650,7 +3650,7 @@ vt 0.1359 0.9043 0.0000
 # 440 texture coords
 
 g Thunderbolt
-usemtl wire_115115115
+usemtl Material__25
 f 7/1/1 2/2/2 447/3/3 
 f 447/3/4 446/4/5 7/1/6 
 f 45/5/7 46/6/8 4/3/9 
