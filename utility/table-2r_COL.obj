@@ -1,7 +1,7 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 06.03.2017 00:03:56
+# File Created: 06.03.2017 23:11:37
 
-mtllib table-2rect-collide.mtl
+mtllib table-2r_COL.mtl
 
 #
 # object Collider001
