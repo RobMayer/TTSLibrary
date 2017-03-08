@@ -1,10 +1,10 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 07.03.2017 21:34:36
+# File Created: 07.03.2017 21:40:19
 
 mtllib table-11_MSH.mtl
 
 #
-# object 11_Table_Post
+# object 11_Standard_Post
 #
 
 v  43.0356 0.2500 -24.8466
@@ -6803,7 +6803,7 @@ vt 0.2185 0.0860 0.0000
 vt 0.2185 0.0860 0.0000
 # 1308 texture coords
 
-g 11_Table_Post
+g 11_Standard_Post
 usemtl Material__2
 f 1/1/1 705/2/2 10/3/3 
 f 11/4/4 707/5/5 3/6/6 
