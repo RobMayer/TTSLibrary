@@ -1,7 +1,7 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 11.03.2017 14:28:41
+# File Created: 11.03.2017 14:50:36
 
-mtllib StrechHexV_MSH.mtl
+mtllib StretchHexV_MSH.mtl
 
 #
 # object StrechHexV_BASE
