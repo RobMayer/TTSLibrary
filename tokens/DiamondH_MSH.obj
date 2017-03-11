@@ -1,5 +1,5 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 11.03.2017 14:33:55
+# File Created: 11.03.2017 14:48:52
 
 mtllib DiamondH_MSH.mtl
 
@@ -62,7 +62,7 @@ vt 0.8620 0.0375 0.0000
 # 8 texture coords
 
 g DiamondH
-usemtl wire_224086086
+usemtl Material__2
 f 5/3/1 14/4/2 2/1/3 
 f 2/1/4 9/2/5 5/3/6 
 f 6/4/7 15/6/8 3/5/9 
@@ -106,13 +106,13 @@ vt 0.0625 0.5022 0.0000
 vt 0.2500 0.2622 0.0000
 vt 0.4375 0.5022 0.0000
 vt 0.7500 0.7422 0.0000
-vt 0.5625 0.5022 0.0000
-vt 0.7500 0.2622 0.0000
 vt 0.9375 0.5022 0.0000
+vt 0.7500 0.2622 0.0000
+vt 0.5625 0.5022 0.0000
 # 8 texture coords
 
 g DiamondH_faces
-usemtl wire_224086086
+usemtl Material__2
 f 19/11/25 20/12/26 17/9/27 
 f 17/9/28 18/10/29 19/11/30 
 f 21/13/31 24/16/32 23/15/33 
