@@ -1,4 +1,4 @@
-#Ship List
+# Ship List
 
 Every Faction should have at least 2 of the following ship classes in order to qualify as "sufficient"
 - 2x Frigate
@@ -22,7 +22,7 @@ Every Faction should have at least 2 of the following ship classes in order to q
 - 1x Scout (variant of Destroyer or Light Cruiser)
 - 1x Tug (variant of Light Cruiser)
 
-#Faction List
+# Faction List
 
 White
 * Jindarian (needs more ships)
