@@ -3,44 +3,44 @@ A collection of my files for Tabletop Simulator
 A list of ship factions that I plan on releasing for the miniatures
 
 White
-* Jindarian
+* Jindarian (needs more ships)
 * Breen
 
 Brown
-* Tholian
+* Tholian (needs more ships)
 * Borak
 
 Red
-* Klingon
-* Talarian
+* Klingon (needs more ships)
+* Talarian (needs more ships)
 
 Orange
-* Kzinti
+* Kzinti (released)
 * Ferengi
 
 Yellow
 * Lyran
-* Cardassian
+* Cardassian (needs more ships)
 
 Green
-* Romulan
+* Romulan (needs more ships)
 * Frax
 
 Teal
-* Gorn
+* Gorn (needs more ships)
 * Sheliak
 
 Blue
-* Federation
+* Federation (needs more ships)
 * Peladine
 
 Purple
-* ISC
-* Hydran
+* ISC (released)
+* Hydran (released)
 
 Pink
-* Triaxian
-* Vudar
+* Triaxian (needs more ships)
+* Vudar (needs more ships)
 
 Black
 * Borg
