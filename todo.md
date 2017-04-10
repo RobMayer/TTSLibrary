@@ -32,10 +32,10 @@ Every Faction should have at least 2 of the following ship classes in order to q
 | Hydran           | HYD | Purple     |  2  |  2  |  2  |  2  |  1  |  2  |  1  |       |       |           |         |
 | Gorn             | GRN | Teal       |  1  |  1  |  1  |  2  |  1  |  0  |  0  |       |       |           |         |
 | Kzinti           | KZN | Orange     |  1  |  1  |  2  |  4  |  2  |  4  |  1  |       |       |           |         |
-| ISC              | ISC | Pink       |  2  |  1  |  1  |  2  |  1  |  0  |  0  |       |       |           |         |
+| ISC              | ISC | Purple     |  2  |  1  |  1  |  2  |  1  |  0  |  0  |       |       |           |         |
 | Tholian          | THL | Brown      |  1  |  1  |  1  |  2  |  1  |  0  |  0  |       |       |           |         |
 | Seltorian        | SEL | White      |     |     |     |     |     |     |     |       |       |           |         |
-| Vudar            | VUD | Purple     |  1  |  1  |  0  |  1  |  1  |  0  |  0  |       |       |           |         |
+| Vudar            | VUD | Pink       |  1  |  1  |  0  |  1  |  1  |  0  |  0  |       |       |           |         |
 | Borak            | BRK | Brown      |     |     |     |     |     |     |     |       |       |           |         |
 | Peladine         | PEL | Blue       |     |     |     |     |     |     |     |       |       |           |         |
 | Frax             | FRX | Green      |     |     |     |     |     |     |     |       |       |           |         |
