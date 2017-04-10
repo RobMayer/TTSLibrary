@@ -19,7 +19,6 @@ Every Faction should have at least 2 of the following ship classes in order to q
 - 1x Small Freighter
 
 (optional)
-- 1x Scout (variant of Destroyer or Light Cruiser)
 - 1x Tug (variant of Light Cruiser)
 
 # Faction List
