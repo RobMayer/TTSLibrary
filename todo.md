@@ -37,7 +37,7 @@ Every Faction should have at least 2 of the following ship classes in order to q
 | Seltorian        | SEL | White      |     |     |     |     |     |     |     |       |       |           |         |
 | Vudar            | VUD | Pink       |  1  |  1  |  0  |  1  |  1  |  0  |  0  |       |       |           |         |
 | Borak            | BRK | Brown      |     |     |     |     |     |     |     |       |       |           |         |
-| Peladine         | PEL | Blue       |     |     |     |     |     |     |     |       |       |           |         |
+| Peladine         | PEL | Blue       |     |  1  |     |  3  |  3  |     |     |       |       |           |         |
 | Frax             | FRX | Green      |     |     |     |     |     |     |     |       |       |           |         |
 | Triaxian         | TRI | Pink       |  1  |  1  |  2  |  1  |  2  |  0  |  0  |       |       |           |         |
 | Cardassian       | CAR | Yellow     |  1  |  1  |     |  1  |  1  |  0  |  0  |       |       |           |         |
