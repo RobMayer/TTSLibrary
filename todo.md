@@ -50,3 +50,7 @@ Every Faction should have at least 2 of the following ship classes in order to q
 | Undine           | UND | Black      |     |     |     |     |     |     |     |       |       |           |         |
 | Orion Pirates    | ORI | Grey       |     |     |     |     |     |     |     |       |       |           |         |
 | Jindarian        | JIN | Grey       |  1  |  1  |  0  |  1  |  1  |  0  |  0  |       |       |           |         |
+
+# Neutrals
+ - Refinery
+ - Shipyard
