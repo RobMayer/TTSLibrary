@@ -28,7 +28,7 @@ Every Faction should have at least 2 of the following ship classes in order to q
 | Federation       | FED | Blue       |  0  |  2  |  3  |  2  |  1  |  5  |  3  |       |       |           |         |
 | Klingon          | KLI | Red        |  0  |  0  |  3  |  2  |  2  |  0  |  0  |       |       |           |         |
 | Romulan          | ROM | Green      |  1  |  1  |  3  |  4  |  2  |  0  |  0  |       |       |           |         |
-| Lyran            | LYR | Yellow     |     |     |     |     |     |     |     |       |       |           |         |
+| Lyran            | LYR | Yellow     |  1  |  1  |  1  |  1  |  1  |  0  |  1  |       |       |           |         |
 | Hydran           | HYD | Purple     |  2  |  2  |  2  |  2  |  1  |  2  |  1  |       |       |           |         |
 | Gorn             | GRN | Teal       |  1  |  1  |  1  |  2  |  1  |  0  |  0  |       |       |           |         |
 | Kzinti           | KZN | Orange     |  1  |  1  |  2  |  4  |  2  |  4  |  1  |       |       |           |         |
@@ -40,15 +40,15 @@ Every Faction should have at least 2 of the following ship classes in order to q
 | Peladine         | PEL | Blue       |     |  1  |     |  3  |  3  |     |     |       |       |           |         |
 | Frax             | FRX | Green      |     |     |     |     |     |     |     |       |       |           |         |
 | Triaxian         | TRI | Pink       |  1  |  1  |  2  |  1  |  2  |  0  |  0  |       |       |           |         |
-| Cardassian       | CAR | Yellow     |  1  |  1  |     |  1  |  1  |  0  |  0  |       |       |           |         |
+| Cardassian       | CAR | Yellow     |  1  |  1  |  0  |  1  |  1  |  0  |  0  |       |       |           |         |
 | Talarian         | TAL | Red        |  1  |  2  |  1  |  1  |  1  |  0  |  0  |       |       |           |         |
 | Ferengi          | FER | Orange     |     |     |     |     |     |     |     |       |       |           |         |
 | Breen            | BRN | White      |     |     |     |     |     |     |     |       |       |           |         |
 | Sheliak          | SHL | Teal       |     |     |     |     |     |     |     |       |       |           |         |
-| Andromedan       | ADN | Black      |     |     |     |     |     |     |     |       |       |           |         |
-| Borg             | BRG | Black      |     |     |     |     |     |     |     |       |       |           |         |
+| Andromedan       | ADN | Black      |  1  |  1  |  1  |  2  |  2  |  0  |  1  |       |       |           |         |
+| Borg             | BRG | Black      |  1  |  1  |  1  |  2  |  2  |  0  |  0  |       |       |           |         |
 | Undine           | UND | Black      |     |     |     |     |     |     |     |       |       |           |         |
-| Orion Pirates    | ORI | Grey       |     |     |     |     |     |     |     |       |       |           |         |
+| Orion Pirates    | ORI | Grey       |  1  |  1  |  1  |  1  |  1  |  2  |  0  |       |       |           |         |
 | Jindarian        | JIN | Grey       |  1  |  1  |  0  |  1  |  1  |  0  |  0  |       |       |           |         |
 
 # Neutrals
