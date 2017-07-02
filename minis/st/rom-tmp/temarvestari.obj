@@ -1,8 +1,8 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 02.07.2017 11:44:17
+# File Created: 02.07.2017 11:54:35
 
 #
-# object Rom_TemarVastari_BB
+# object Rom_TemarVestari_BB
 #
 
 v  -0.0001 0.8223 0.2724
@@ -5039,7 +5039,7 @@ vt 0.2529 0.7642 0.5021
 vt 0.2529 0.7751 0.5021
 # 1613 texture coords
 
-g Rom_TemarVastari_BB
+g Rom_TemarVestari_BB
 f 384/384 404/404 403/403 
 f 403/403 383/383 384/384 
 f 386/386 406/406 405/405 
