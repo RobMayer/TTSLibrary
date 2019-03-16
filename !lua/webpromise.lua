@@ -1,4 +1,7 @@
-API = (function()
+API = function(baseUrl, defParameters)
+
+    local _base = baseUrl or ""
+    local _defparam = defParameters or {}
 
     local encode = function(str)
         str:gsub("([^A-Za-z0-9%_%.%-%~])", function(v)
@@ -54,13 +57,18 @@ API = (function()
             if (response.is_error) then
                 return _onfault(response.error)
             end
-            if (response.text.errors ~= nil) then
-                return _onfailure(response.text.errors)
+            jRes = JSON.decode(response.text)
+            if (jRes.errors ~= nil) then
+                return _onfailure(jRes.errors)
             end
-            return _onsuccess(response.text.result or response.text or {})
+            return _onsuccess(jRes.result or jRes or {})
         end
 
-        this["try"] = function(callback)
+		this["param"] = function(key, value)
+            _params[key] = value
+            return this
+		end
+        this["resolve"] = function(callback)
             _onsuccess = callback
             return this
         end
@@ -72,47 +80,50 @@ API = (function()
             _onfault = callback
             return this
         end
-        this["resolve"] = function()
+        this["dispatch"] = function()
             if (_mode == "get") then
-                local to = _url .. "?" .. querify(_params)
+                for k,v in pairs(_defparam) do
+                    _params[k] = v
+                end
+                local to = _base .. _url .. "?" .. querify(_params)
                 WebRequest.get(to, _keep)
             elseif (_mode == "post") then
-                local to = _url .. "?" .. querify(_params)
+                for k,v in pairs(_defparam) do
+                    _params[k] = v
+                end
+                local to = _base .. _url .. "?" .. querify(_params)
                 WebRequest.post(to, _body, _keep)
             end
+            return this
         end
         return this
     end
 
-    local sys = {
-        ["get"] = function(url, params)
-            return promise("get", url, params or {})
-        end,
-        ["post"] = function(url, body, params)
-            return promise("post", url, params or {}, body or {})
-        end
-    }
-    return sys
-end)()
 
+    local sys = {}
+    sys["get"] = function(url, params)
+        return promise("get", url, params or {})
+    end
+    sys["post"] = function(url, body, params)
+        return promise("post", url, params or {}, body or {})
+    end
+    sys["base"] = function(url)
+        _base = url
+        return sys
+    end
+    sys["defparam"] = function(key, value)
+        _defparam[key] = value
+        return sys
+    end
+    return sys
+end
 
 --[[
-	//Get
-	API.get(url, {urlparams}).try(function(results) --will fire if it succeeds
-		log(result) 
-	end).catch(function(result) -- will fire if body result contains key "errors"
-		log(result)
-	end).fault(function(error) -- will fire if something went wrong in WebRequest
-		log(error)
-	end).resolve()
-	
-	//Post
-	API.post(url, {body}, {urlparams}).try(function(results) --will fire if it succeeds
-		log(result) 
-	end).catch(function(result) -- will fire if body result contains key "errors"
-		log(result)
-	end).fault(function(error) -- will fire if something went wrong in WebRequest
-		log(error)
-	end).resolve()
-	
+    local MyApi = API("http://api.yoursite.com/")
+    local request = MyApi.get("some/endpoint").resolve(function(result) log(res) end)
+
+    request.dispatch()
+    request.dispatch()
+
+    local MyOtherApi = API("http://api.somesite.com/").get("endpoint").resolve(log).dispatch()
 ]]
