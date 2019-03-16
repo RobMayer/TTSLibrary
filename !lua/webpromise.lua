@@ -94,3 +94,25 @@ API = (function()
     }
     return sys
 end)()
+
+
+--[[
+	//Get
+	API.get(url, {urlparams}).try(function(results) --will fire if it succeeds
+		log(result) 
+	end).catch(function(result) -- will fire if body result contains key "errors"
+		log(result)
+	end).fault(function(error) -- will fire if something went wrong in WebRequest
+		log(error)
+	end).resolve()
+	
+	//Post
+	API.post(url, {body}, {urlparams}).try(function(results) --will fire if it succeeds
+		log(result) 
+	end).catch(function(result) -- will fire if body result contains key "errors"
+		log(result)
+	end).fault(function(error) -- will fire if something went wrong in WebRequest
+		log(error)
+	end).resolve()
+	
+]]
