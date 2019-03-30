@@ -1,3 +1,5 @@
+TRH_Class = "mini" --leave this be. it's how tokens recognize this as a valid target
+
 local const = { SPECTATOR = 1, PLAYER = 2, PROMOTED = 4, BLACK = 8, HOST = 16, ALL = 31, NOSPECTATOR = 30 }
 
 config = {
@@ -59,7 +61,6 @@ end
 
 -- DONT EDIT BELOW THIS LINE
 
-TRH_Class = "mini" --leave this be. it's how tokens recognize this as a valid target
 local state = {}
 local uimode_settings = 0
 local arclen = 1;
@@ -378,6 +379,10 @@ end
 function unsetController()
     controllerObj = nil
 end
+
+--[[
+UI functions - don't use these - use the original hooks above
+]]
 
 --bars
 function ui_addBar(player)
