@@ -2,38 +2,7 @@ TRH_Class = "mini" --leave this be. it's how tokens recognize this as a valid ta
 
 local const = { SPECTATOR = 1, PLAYER = 2, PROMOTED = 4, BLACK = 8, HOST = 16, ALL = 31, NOSPECTATOR = 30 }
 
-config = {
-    READONLY = false, --set to true to hide buttons (for use with the control panel)
-    ACCESS = {const.PLAYER, const.HOST}, --who is allowed to play with things?
-    UPPER_BOUNDS = 1.25, --how high off the origin of the miniture is the UI, in world units.
-    UI_WIDTH = 1.25, --set the width of the UI in world units, minimum 1.0
-    REFRESH_DELAY = 3, --number of frames to wait after rebuilding assets to rebuilding the UI. Increase this if you're finding that images aren't displaying right
-    DEFAULT_STATE = { --if the HUD doesn't find anything in the save data, it will default to this
-        bars = {
-            {"Health", "#cc0000", 10, 10, true }, --1: Name, 2: color (must be valid hex color), 3: starting value, 4: maximum value, 5: is it an important (and thus slightly bigger) bar. defaults to false
-        },
-        markers = { --list of default markers. Use the format below
-            --1:Name, 2: URL, 3: Color, 4:Count - how many times has this mini received this marker?
-        },
-    },
-    PRELOADED_ASSETS = { --gets added to assets rebuild each and every time. Not well documented, sorry.
-
-    },
-    ARC = {
-        MESH = "https://raw.githubusercontent.com/RobMayer/TTSLibrary/master/components/arcs/round6.obj", --which mesh?
-            -- https://raw.githubusercontent.com/RobMayer/TTSLibrary/master/components/arcs/round6.obj is a rounded-perimiter with 6 arcs
-            -- https://raw.githubusercontent.com/RobMayer/TTSLibrary/master/components/arcs/round4.obj rounded-peremiter with 4 arcs
-            -- https://raw.githubusercontent.com/RobMayer/TTSLibrary/master/components/arcs/round12.obj rounded-peremiter with 12 arcs
-            -- https://raw.githubusercontent.com/RobMayer/TTSLibrary/master/components/arcs/hex6.obj hex-peremiter with 6 arcs
-            -- https://raw.githubusercontent.com/RobMayer/TTSLibrary/master/components/arcs/hex12.obj hex-peremiter with 12 arcs
-            -- https://raw.githubusercontent.com/RobMayer/TTSLibrary/master/components/arcs/hex0.obj hex-peremiter with no arc lines
-            -- https://raw.githubusercontent.com/RobMayer/TTSLibrary/master/components/arcs/round0.obj round-peremiter with no arc lines
-            -- if you want to use your own mesh, the system is designed to use 1-unit radius as a basis and scales the mesh up from there based on the current range value
-        COLOR = "inherit", --what color will the arc indicator be. Use a hex color string such as ""#ffcc33" or the word "inherit" which means it will pull from the miniature's tint.
-        SCALE = 1, --three options here - use 0 to make the mesh static/non-scalable. Use a number to have the ranges go up and down by that amount, or you can use a list-table to indicate what specific brackets you want, such as {1, 4, 7, 13}
-        MAX_RANGE = 8, --if scale is non-zero number, what's the maximum range you want to be usable? ignored if SCALE is provided as a table
-    }
-}
+config = {} --[[CONFIG GOES HERE]]
 
 local permit = function(player)
     local rights = bit32.bor(
