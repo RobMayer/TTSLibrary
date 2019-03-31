@@ -329,10 +329,13 @@ function setController(data)
 end
 
 function unsetController()
-	if (controllerObj ~= nil) then
+    controllerObj = nil
+end
+
+function unsubscribe()
+    if (controllerObj ~= nil) then
         controllerObj.call("untrack", {guid=self.guid})
     end
-    controllerObj = nil
 end
 
 --[[
