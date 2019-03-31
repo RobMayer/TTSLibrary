@@ -331,6 +331,9 @@ function unsubscribe()
     if (controllerObj ~= nil) then
         controllerObj.call("untrack", {guid=self.guid})
     end
+	if (arcObj ~= nil) then
+        arcObj.destruct()
+    end
 end
 
 --[[
