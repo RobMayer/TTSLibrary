@@ -6,11 +6,6 @@ config = {} --[[CONFIG GOES HERE]]
 
 local preloaded_assets = {}
 
-
---[[
-	{REFRESH = 3, UI_HEIGHT = 1.25, UI_FROM = "ORIGIN", UI_WIDTH = 1.5, PERMEDIT = 10, PERMVIEW = 524287, ARCMODE = 1, ARCMESH = "https://raw.githubusercontent.com/RobMayer/TTSLibrary/master/components/arcs/round6.obj", ARCBRACKETS = {}, ARCSCALE = 1, ARCCOLOR = "inherit", ARCMAX = 16, BARS = {},}
-]]
-
 function onSave()
     local save = {}
     --add more hooks here if you need them, but leave this one here
@@ -48,7 +43,7 @@ function showArc()
 			self.UI.show("disp_arc_len")
             self.UI.show("btn_arc_sub")
             self.UI.show("btn_arc_add")
-			theScale = config.ARCSCALE * arclen
+			theScale = config.ARCSCALE * (arclen - (config.ARCBASE or 0))
 		elseif (config.ARCMODE == 2) then --Static
 
 		elseif (config.ARCMODE == 3) then --Brackets
@@ -122,10 +117,10 @@ function setArcValue(data)
     if (arcobj ~= nil) then
         arclen = tonumber(data.value) or arclen
 		if (config.ARCMODE == 1) then --incremental
-			arcobj.setScale({arclen * config.ARCSCALE, 1, arclen * config.ARCSCALE})
+			arcobj.setScale({(arclen - (config.ARCBASE or 0)) * config.ARCSCALE, 1, (arclen - (config.ARCBASE or 0)) * config.ARCSCALE})
             self.UI.setAttribute("disp_arc_len", "text", arclen)
 		elseif (config.ARCMODE == 3) then --brackets
-			arcobj.setScale({config.ARCBRACKETS[arclen] * config.ARCSCALE, 1, config.ARCBRACKETS[arclen] * config.ARCSCALE})
+			arcobj.setScale({(config.ARCBRACKETS[arclen] - (config.ARCBASE or 0)) * config.ARCSCALE, 1, (config.ARCBRACKETS[arclen] - (config.ARCBASE or 0)) * config.ARCSCALE})
             self.UI.setAttribute("disp_arc_len", "text", config.ARCBRACKETS[arclen])
 		end
     end
@@ -135,10 +130,10 @@ function arcSub()
     if (arcobj ~= nil) then
         arclen = math.max(1, arclen - 1)
         if (config.ARCMODE == 1) then --incremental
-			arcobj.setScale({arclen * config.ARCSCALE, 1, arclen * config.ARCSCALE})
+			arcobj.setScale({(arclen - (config.ARCBASE or 0)) * config.ARCSCALE, 1, (arclen - (config.ARCBASE or 0)) * config.ARCSCALE})
             self.UI.setAttribute("disp_arc_len", "text", arclen)
 		elseif (config.ARCMODE == 3) then --brackets
-			arcobj.setScale({config.ARCBRACKETS[arclen] * config.ARCSCALE, 1, config.ARCBRACKETS[arclen] * config.ARCSCALE})
+			arcobj.setScale({(config.ARCBRACKETS[arclen] - (config.ARCBASE or 0)) * config.ARCSCALE, 1, (config.ARCBRACKETS[arclen] - (config.ARCBASE or 0)) * config.ARCSCALE})
             self.UI.setAttribute("disp_arc_len", "text", config.ARCBRACKETS[arclen])
 		end
     end
@@ -150,11 +145,11 @@ function arcAdd()
 
 		if (config.ARCMODE == 1) then --incremental
 			arclen = math.min(config.ARCMAX, arclen + 1)
-			arcobj.setScale({arclen * config.ARCSCALE, 1, arclen * config.ARCSCALE})
+			arcobj.setScale({(arclen - (config.ARCBASE or 0)) * config.ARCSCALE, 1, (arclen - (config.ARCBASE or 0)) * config.ARCSCALE})
             self.UI.setAttribute("disp_arc_len", "text", arclen)
 		elseif (config.ARCMODE == 3) then --brackets
 			arclen = math.min(#(config.ARCBRACKETS), arclen + 1)
-			arcobj.setScale({config.ARCBRACKETS[arclen] * config.ARCSCALE, 1, config.ARCBRACKETS[arclen] * config.ARCSCALE})
+			arcobj.setScale({(config.ARCBRACKETS[arclen] - (config.ARCBASE or 0)) * config.ARCSCALE, 1, (config.ARCBRACKETS[arclen] - (config.ARCBASE or 0)) * config.ARCSCALE})
             self.UI.setAttribute("disp_arc_len", "text", config.ARCBRACKETS[arclen])
 		end
     end
