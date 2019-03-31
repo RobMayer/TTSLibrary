@@ -50,7 +50,7 @@ function showArc()
 			self.UI.show("disp_arc_len")
             self.UI.show("btn_arc_sub")
             self.UI.show("btn_arc_add")
-			theScale = config.ARCSCALE * config.ARCBRACKETS[arclen]
+			theScale = config.ARCSCALE * (config.ARCBRACKETS[arclen] - (config.ARCBASE or 0))
 		end
 
 		arcobj = spawnObject({
