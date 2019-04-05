@@ -526,7 +526,7 @@ function rebuildUI()
     local w = math.max(200, (tonumber(config.UI_WIDTH) or 2) * 200)
     local mainBarList = {}
     local mainMarkerList = {}
-	local mainFlag = flagActive and ({tag="Panel", attributes={ id="flag_container", minHeight=(state.flag.height) * 100, active=(flagOn == true) }, children={ {tag="image", attributes={image="fl_image", width=((state.flag.width) * 100), color=state.flag.color or "#ffffffff"}} } }) or {}
+	local mainFlag = flagActive and ({tag="Panel", attributes={ id="flag_container", minHeight=(state.flag.height) * 100, active=(flagOn == true) }, children={ {tag="image", attributes={image="fl_image", width=((state.flag.width) * 100), color=state.flag.color or "#ffffff"}} } }) or {}
 
 
     local ui_settings_bars = {
