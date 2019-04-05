@@ -1,4 +1,5 @@
 TRH_Class = "mini" --leave this be. it's how tokens recognize this as a valid target
+TRH_Version = "2.2"
 
 local const = { SPECTATOR = 1, PLAYER = 2, PROMOTED = 4, BLACK = 8, HOST = 16, ALL = 31, NOSPECTATOR = 30, LARGEBAR = 30, SMALLBAR=15 }
 
@@ -25,8 +26,9 @@ local state = {}
 local uimode_settings = 0
 local arclen = 1;
 local arcobj;
-local controllerObj;
+local controllerObj
 local assetBuffer = {}
+local flagOn = false
 
 --Arc
 function showArc()
@@ -314,6 +316,53 @@ function clearBars()
     if (controllerObj ~= nil) then controllerObj.call("rebuildUI", {}) end
 end
 
+--Flags
+
+function toggleFlag()
+    flagOn = not(flagOn)
+    if (flagOn) then
+        self.UI.show("flag_container")
+    else
+        self.UI.hide("flag_container")
+    end
+end
+
+function setFlag(data)
+
+    if (data.image ~= nil) then
+        if (data.image ~= "") then
+            state.flag.image = data.image
+        end
+        self.UI.setAttribute("inp_flag_image", "value", data.image)
+    end
+    if (data.width ~= nil) then
+        local n = tonumber(data.width)
+        if (n ~= nil) then
+            state.flag.width = n
+        end
+        self.UI.setAttribute("inp_flag_width", "value", data.width)
+    end
+    if (data.height ~= nil) then
+        local n = tonumber(data.height)
+        if (n ~= nil) then
+            state.flag.height = n
+        end
+        self.UI.setAttribute("inp_flag_height", "value", data.height)
+    end
+    if (data.color ~= nil) then
+        if (string.len(data.color) == 7 and string.sub(data.color, 1, 1) == "#") then
+            state.flag.color = data.color
+        end
+        self.UI.setAttribute("inp_flag_color", "value", data.color)
+    end
+    if (data.automode ~= nil) then
+        state.flag.automode = data.automode
+        self.UI.setAttribute("inp_flag_automode", "isOn", data.automode)
+        flagOn = data.automode
+    end
+
+end
+
 --Utility
 function setController(data)
     if (data.object == nil) then error("object required") end
@@ -335,6 +384,7 @@ function unsubscribe()
         arcObj.destruct()
     end
 end
+
 
 --[[
 UI functions - don't use these - use the original hooks above
@@ -384,11 +434,35 @@ function ui_popMarker(player, index)
     popMarker({index=index})
 end
 
+function ui_setflag(player, val, id)
+    local args = {}
+    for a in string.gmatch(id, "([^%_]+)") do
+        table.insert(args,a)
+    end
+    local key = args[3]
+    if (key == "image") then
+        setFlag({image=val})
+    elseif (key == "color") then
+        setFlag({color=val})
+    elseif (key == "width") then
+        setFlag({width=val})
+    elseif (key == "height") then
+        setFlag({height=val})
+    elseif (key == "automode") then
+        setFlag({automode=(val == "True")})
+    end
+end
+
+
+
 --Arcs
 function ui_showarc(player) showArc() end
 function ui_hidearc(player) hideArc() end
 function ui_arcadd(player) arcAdd() end
 function ui_arcsub(player) arcSub() end
+
+function ui_flag(player) toggleFlag() end
+
 
 --ui util functions
 function uimode(player, mode)
@@ -396,8 +470,10 @@ function uimode(player, mode)
     uimode_settings = mode
     if (mode == 0) then
         rebuildAssets()
+        Wait.frames(rebuildUI, config.REFRESH or 3)
+    else
+        rebuildUI()
     end
-    rebuildUI()
 end
 
 
@@ -414,9 +490,13 @@ function rebuildAssets()
         {name="ui_effects", url="https://raw.githubusercontent.com/RobMayer/TTSLibrary/master/ui/effects.png"},
         {name="ui_reload", url="https://raw.githubusercontent.com/RobMayer/TTSLibrary/master/ui/reload.png"},
         {name="ui_arcs", url="https://raw.githubusercontent.com/RobMayer/TTSLibrary/master/ui/arcs.png"},
+        {name="ui_flag", url="https://raw.githubusercontent.com/RobMayer/TTSLibrary/master/ui/flag.png"},
     }
     for theName,theUrl in pairs(preloaded_assets) do
         table.insert(assets, {name=theName, url=theUrl})
+    end
+    if (state.flag.image ~= nil and state.flag.width ~= nil and state.flag.height ~= nil) then
+        table.insert(assets, {name="fl_image", url=state.flag.image})
     end
     local bufLen = 0
     assetBuffer = {}
@@ -433,6 +513,7 @@ end
 function rebuildUI()
 
     local arcsActive = config.ARCMODE ~= 0
+    local flagActive = (state.flag.image ~= nil and state.flag.height ~= nil and state.flag.width ~= nil and state.flag.height > 0 and state.flag.width > 0);
     local arcsOn = arcobj ~= nil
     local arcsScalable = false
     if (config.ARCMODE == 1) then --incremental
@@ -445,6 +526,8 @@ function rebuildUI()
     local w = math.max(200, (tonumber(config.UI_WIDTH) or 2) * 200)
     local mainBarList = {}
     local mainMarkerList = {}
+	local mainFlag = flagActive and ({tag="Panel", attributes={ id="flag_container", minHeight=(state.flag.height) * 100, active=(flagOn == true) }, children={ {tag="image", attributes={image="fl_image", width=((state.flag.width) * 100), color=state.flag.color or "#ffffffff"}} } }) or {}
+
 
     local ui_settings_bars = {
         tag="panel",
@@ -512,6 +595,30 @@ function rebuildUI()
             { tag="Button", attributes={width="150", height="30", rectAlignment="LowerRight", text="Clear Markers", onClick="ui_clearMarkers"} },
         }
     }
+    local ui_settings_flag = {
+        tag="panel",
+        attributes={id="ui_settings_flag", offsetXY="0 40", height="400", rectAlignment="LowerCenter", color="black", active=(uimode_settings == 3)},
+        children={
+            {tag="VerticalLayout", attributes = {width=500, height="340", spacing="5", rectAlignment="UpperCenter", offsetXY="0 -30", childForceExpandHeight=false, padding="5 5 5 5"}, children={
+                {tag="Text", attributes={text="URL", color="#ffffff", alignment="MiddleLeft", minHeight="20"}},
+                {tag="InputField", attributes={id="inp_flag_image", text=(state.flag.image), onEndEdit="ui_setflag", minheight="30"}},
+                {tag="HorizontalLayout", attributes={childForceExpandHeight=false, spacing="5"}, children={
+                    {tag="Text", attributes={text="Width", color="#ffffff", alignment="MiddleLeft", minheight="30", preferredWidth="50"}},
+                    {tag="InputField", attributes={id="inp_flag_width", text=(state.flag.width), onEndEdit="ui_setflag", minheight="30", preferredWidth="50"}},
+                    {tag="Text", attributes={text="Height", color="#ffffff", alignment="MiddleLeft", minheight="30", preferredWidth="50", preferredWidth="50"}},
+                    {tag="InputField", attributes={id="inp_flag_height", text=(state.flag.height), onEndEdit="ui_setflag", minheight="30", preferredWidth="50"}},
+                }},
+                {tag="HorizontalLayout", attributes={childForceExpandHeight=false, spacing="5"}, children={
+                    {tag="Text", attributes={text="Color", color="#ffffff", alignment="MiddleLeft", minheight="30", preferredWidth="50", preferredWidth="50"}},
+                    {tag="InputField", attributes={id="inp_flag_color", text=(state.flag.color), onEndEdit="ui_setflag", minheight="30", preferredWidth="50"}},
+                    {tag="Text", attributes={text="Auto-On", color="#ffffff", alignment="MiddleLeft", minheight="30", preferredWidth="50", preferredWidth="50"}},
+                    {tag="Toggle", attributes={id="inp_flag_automode", onValueChanged="ui_setflag", minheight="30", isOn=(state.flag.automode), preferredWidth="50"}},
+                }},
+            }},
+            { tag="text", attributes={fontSize="24", height="30", text="FLAG", color="#cccccc", rectAlignment="UpperLeft", alignment="MiddleCenter"} },
+            { tag="Button", attributes={width="150", height="30", rectAlignment="LowerRight", text="Remove Flag", onClick="ui_clearFlag"} },
+        }
+    }
 
     for i,marker in pairs(state.markers) do
         table.insert(mainMarkerList, {
@@ -571,8 +678,6 @@ function rebuildUI()
         }})
     end
 
-
-
     local ui_settings = {
         tag="panel",
         attributes={
@@ -589,9 +694,11 @@ function rebuildUI()
             --{tag="button", attributes={id="btn_hide", height="20", width="20", rectAlignment="LowerCenter", image="ui_hide", offsetXY="0 0", colors="#ccccccff|#ffffffff|#404040ff|#808080ff"}},
             {tag="button", attributes={height="40", width="40", rectAlignment="LowerLeft", image="ui_bars", offsetXY="0 0", colors="#ccccccff|#ffffffff|#404040ff|#808080ff", onClick="uimode(1)"}},
             {tag="button", attributes={height="40", width="40", rectAlignment="LowerLeft", image="ui_stack", offsetXY="40 0", colors="#ccccccff|#ffffffff|#404040ff|#808080ff", onClick="uimode(2)"}},
+            {tag="button", attributes={height="40", width="40", rectAlignment="LowerLeft", image="ui_flag", offsetXY="80 0", colors="#ccccccff|#ffffffff|#404040ff|#808080ff", onClick="uimode(3)"}},
             {tag="button", attributes={height="40", width="40", rectAlignment="LowerCenter", image="ui_close", offsetXY="0 0", colors="#ccccccff|#ffffffff|#404040ff|#808080ff", onClick="uimode(0)"}},
             ui_settings_bars,
             ui_settings_markers,
+            ui_settings_flag,
         }
     }
 
@@ -609,7 +716,8 @@ function rebuildUI()
             width=w,
         },
         children={
-            {tag="VerticalLayout", attributes={rectAlignment="LowerCenter", childAlignment="LowerCenter", childForceExpandHeight=false, height="5000", spacing="5"}, children={
+            {tag="VerticalLayout", attributes={rectAlignment="LowerCenter", childAlignment="LowerCenter", childForceExpandHeight=false, childForceExpandWidth=true, height="5000", spacing="5"}, children={
+				mainFlag,
                 {tag="GridLayout", attributes={contentSizeFitter="vertical", childAlignment="LowerLeft", flexibleHeight="0", cellSize="70 70", padding="20 20 0 0"}, children=mainMarkerList},
                 {tag="VerticalLayout", attributes={contentSizeFitter="vertical", childAlignment="LowerCenter", flexibleHeight="0"}, children=mainBarList},
                 {tag="Panel", attributes={minHeight="30", flexibleHeight="0"}, children={
@@ -618,6 +726,7 @@ function rebuildUI()
                     {tag="button", attributes={id="btn_arc_sub", active=(arcsActive and arcsOn and arcsScalable), height="30", width="30", rectAlignment="LowerLeft", image="ui_minus", offsetXY="-70 0", colors="#ccccccff|#ffffffff|#404040ff|#808080ff", onClick="ui_arcsub", visibility=config.PERMEDIT}},
                     {tag="text", attributes={id="disp_arc_len", active=(arcsActive and arcsOn and arcsScalable), height="30", width="30", rectAlignment="LowerLeft", text=((config.ARCMODE == 3) and config.ARCBRACKETS[arclen] or arclen), offsetXY="-40 0", color="#ffffff", fontSize="20", outline="#000000", visibility=config.PERMEDIT}},
                     {tag="button", attributes={id="btn_arc_add", active=(arcsActive and arcsOn and arcsScalable), height="30", width="30", rectAlignment="LowerLeft", image="ui_plus", offsetXY="-10 0", colors="#ccccccff|#ffffffff|#404040ff|#808080ff", onClick="ui_arcadd", visibility=config.PERMEDIT}},
+                    {tag="button", attributes={id="btn_flag_toggle", active=flagActive, height="30", width="30", rectAlignment="LowerRight", image="ui_flag", offsetXY="-80 0", colors="#ccccccff|#ffffffff|#404040ff|#808080ff", onClick="ui_flag", visibility=config.PERMEDIT}},
                     {tag="button", attributes={height="30", width="30", rectAlignment="LowerRight", image="ui_gear", offsetXY="-50 0", colors="#ccccccff|#ffffffff|#404040ff|#808080ff", onClick="uimode(1)", visibility=config.PERMEDIT}},
                     {tag="button", attributes={height="30", width="30", rectAlignment="LowerRight", image="ui_reload", offsetXY="-20 0", colors="#ccccccff|#ffffffff|#404040ff|#808080ff", onClick="rebuildUI", visibility=config.PERMVIEW}},
                 }},
@@ -630,6 +739,7 @@ end
 function miniutilSave(save)
     save.bars = state.bars
     save.markers = state.markers
+    save.flag = state.flag
     if (controllerObj ~= nil) then
         save.controller = controllerObj.guid
     end
@@ -639,6 +749,8 @@ end
 function miniutilLoad(save)
     state.bars = save.bars or {}
     state.markers = save.markers or {}
+    state.flag = save.flag or {}
+    flagOn = state.flag.automode or false
     if (save.controller ~= nil) then
         local theObj = getObjectFromGUID(save.controller)
         if (theObj ~= nil) then
