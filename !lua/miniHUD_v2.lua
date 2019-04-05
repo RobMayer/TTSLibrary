@@ -363,6 +363,19 @@ function setFlag(data)
 
 end
 
+function clearFlag()
+	state.flag.image = ""
+	self.UI.setAttribute("inp_flag_image", "value", "")
+	state.flag.width = 0
+	self.UI.setAttribute("inp_flag_width", "value", 0)
+	state.flag.height = 0
+	self.UI.setAttribute("inp_flag_height", "value", 0)
+	state.flag.color = "#ffffff"
+	self.UI.setAttribute("inp_flag_color", "value", "#ffffff")
+	state.flag.automode = false
+	self.UI.setAttribute("inp_flag_automode", "isOn", false)
+end
+
 --Utility
 function setController(data)
     if (data.object == nil) then error("object required") end
@@ -434,6 +447,7 @@ function ui_popMarker(player, index)
     popMarker({index=index})
 end
 
+--Flag
 function ui_setflag(player, val, id)
     local args = {}
     for a in string.gmatch(id, "([^%_]+)") do
@@ -452,7 +466,9 @@ function ui_setflag(player, val, id)
         setFlag({automode=(val == "True")})
     end
 end
-
+function ui_clearFlag(player)
+	clearFlag()
+end
 
 
 --Arcs
@@ -462,6 +478,7 @@ function ui_arcadd(player) arcAdd() end
 function ui_arcsub(player) arcSub() end
 
 function ui_flag(player) toggleFlag() end
+
 
 
 --ui util functions
