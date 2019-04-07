@@ -466,7 +466,7 @@ function ui_setflag(player, val, id)
         setFlag({automode=(val == "True")})
     end
 end
-function ui_clearFlag(player)
+function ui_clearflag(player)
 	clearFlag()
 end
 
@@ -633,7 +633,7 @@ function rebuildUI()
                 }},
             }},
             { tag="text", attributes={fontSize="24", height="30", text="FLAG", color="#cccccc", rectAlignment="UpperLeft", alignment="MiddleCenter"} },
-            { tag="Button", attributes={width="150", height="30", rectAlignment="LowerRight", text="Remove Flag", onClick="ui_clearFlag"} },
+            { tag="Button", attributes={width="150", height="30", rectAlignment="LowerRight", text="Remove Flag", onClick="ui_clearflag"} },
         }
     }
 
