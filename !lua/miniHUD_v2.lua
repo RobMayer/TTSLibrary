@@ -1,5 +1,5 @@
 TRH_Class = "mini" --leave this be. it's how tokens recognize this as a valid target
-TRH_Version = "2.2"
+TRH_Version = "2.3"
 
 local const = { SPECTATOR = 1, PLAYER = 2, PROMOTED = 4, BLACK = 8, HOST = 16, ALL = 31, NOSPECTATOR = 30, LARGEBAR = 30, SMALLBAR=15 }
 
@@ -45,14 +45,14 @@ function showArc()
 			self.UI.show("disp_arc_len")
             self.UI.show("btn_arc_sub")
             self.UI.show("btn_arc_add")
-			theScale = config.ARCSCALE * (arclen + (config.BASESIZE or 0))
+			theScale = config.ARCSCALE * (arclen + (config.ARCZERO or 0))
 		elseif (config.ARCMODE == 2) then --Static
 
 		elseif (config.ARCMODE == 3) then --Brackets
 			self.UI.show("disp_arc_len")
             self.UI.show("btn_arc_sub")
             self.UI.show("btn_arc_add")
-			theScale = config.ARCSCALE * (config.ARCBRACKETS[arclen] + (config.BASESIZE or 0))
+			theScale = config.ARCSCALE * (config.ARCBRACKETS[arclen] + (config.ARCZERO or 0))
 		end
 
 		arcobj = spawnObject({
@@ -119,10 +119,10 @@ function setArcValue(data)
     if (arcobj ~= nil) then
         arclen = tonumber(data.value) or arclen
 		if (config.ARCMODE == 1) then --incremental
-			arcobj.setScale({(arclen + (config.BASESIZE or 0)) * config.ARCSCALE, 1, (arclen + (config.BASESIZE or 0)) * config.ARCSCALE})
+			arcobj.setScale({(arclen + (config.ARCZERO or 0)) * config.ARCSCALE, 1, (arclen + (config.ARCZERO or 0)) * config.ARCSCALE})
             self.UI.setAttribute("disp_arc_len", "text", arclen)
 		elseif (config.ARCMODE == 3) then --brackets
-			arcobj.setScale({(config.ARCBRACKETS[arclen] + (config.BASESIZE or 0)) * config.ARCSCALE, 1, (config.ARCBRACKETS[arclen] + (config.BASESIZE or 0)) * config.ARCSCALE})
+			arcobj.setScale({(config.ARCBRACKETS[arclen] + (config.ARCZERO or 0)) * config.ARCSCALE, 1, (config.ARCBRACKETS[arclen] + (config.ARCZERO or 0)) * config.ARCSCALE})
             self.UI.setAttribute("disp_arc_len", "text", config.ARCBRACKETS[arclen])
 		end
     end
@@ -132,10 +132,10 @@ function arcSub()
     if (arcobj ~= nil) then
         arclen = math.max(1, arclen - 1)
         if (config.ARCMODE == 1) then --incremental
-			arcobj.setScale({(arclen + (config.BASESIZE or 0)) * config.ARCSCALE, 1, (arclen + (config.BASESIZE or 0)) * config.ARCSCALE})
+			arcobj.setScale({(arclen + (config.ARCZERO or 0)) * config.ARCSCALE, 1, (arclen + (config.ARCZERO or 0)) * config.ARCSCALE})
             self.UI.setAttribute("disp_arc_len", "text", arclen)
 		elseif (config.ARCMODE == 3) then --brackets
-			arcobj.setScale({(config.ARCBRACKETS[arclen] + (config.BASESIZE or 0)) * config.ARCSCALE, 1, (config.ARCBRACKETS[arclen] + (config.BASESIZE or 0)) * config.ARCSCALE})
+			arcobj.setScale({(config.ARCBRACKETS[arclen] + (config.ARCZERO or 0)) * config.ARCSCALE, 1, (config.ARCBRACKETS[arclen] + (config.ARCZERO or 0)) * config.ARCSCALE})
             self.UI.setAttribute("disp_arc_len", "text", config.ARCBRACKETS[arclen])
 		end
     end
@@ -147,11 +147,11 @@ function arcAdd()
 
 		if (config.ARCMODE == 1) then --incremental
 			arclen = math.min(config.ARCMAX, arclen + 1)
-			arcobj.setScale({(arclen + (config.BASESIZE or 0)) * config.ARCSCALE, 1, (arclen + (config.BASESIZE or 0)) * config.ARCSCALE})
+			arcobj.setScale({(arclen + (config.ARCZERO or 0)) * config.ARCSCALE, 1, (arclen + (config.ARCZERO or 0)) * config.ARCSCALE})
             self.UI.setAttribute("disp_arc_len", "text", arclen)
 		elseif (config.ARCMODE == 3) then --brackets
 			arclen = math.min(#(config.ARCBRACKETS), arclen + 1)
-			arcobj.setScale({(config.ARCBRACKETS[arclen] + (config.BASESIZE or 0)) * config.ARCSCALE, 1, (config.ARCBRACKETS[arclen] + (config.BASESIZE or 0)) * config.ARCSCALE})
+			arcobj.setScale({(config.ARCBRACKETS[arclen] + (config.ARCZERO or 0)) * config.ARCSCALE, 1, (config.ARCBRACKETS[arclen] + (config.ARCZERO or 0)) * config.ARCSCALE})
             self.UI.setAttribute("disp_arc_len", "text", config.ARCBRACKETS[arclen])
 		end
     end
@@ -540,7 +540,9 @@ function rebuildUI()
         arcsScalable = (#(config.ARCBRACKETS or {}) > 1)
     end
 
-    local w = math.max(200, (tonumber(config.UI_WIDTH) or 2) * 200)
+	local w = math.max(200, (tonumber(config.UI_WIDTH) or 1) / ((config.UI_SCALE or 1)) * 200)
+	local orient = config.UI_ORIENT or "VERTICAL"
+	
     local mainBarList = {}
     local mainMarkerList = {}
 	local mainFlag = flagActive and ({tag="Panel", attributes={ id="flag_container", minHeight=(state.flag.height) * 100, active=(flagOn == true) }, children={ {tag="image", attributes={image="fl_image", width=((state.flag.width) * 100), color=state.flag.color or "#ffffff"}} } }) or {}
@@ -702,8 +704,8 @@ function rebuildUI()
             height="0",
             width=500,
             position="0 0 -"..(tonumber(config.UI_HEIGHT) or 1.5) * 100,
-            rotation="-90 0 0",
-            scale="0.5 0.5 0.5",
+            rotation=(orient == "HORIZONTAL" and "0 0 180" or "-90 0 0"),
+            scale=((config.UI_SCALE or 1) / 2.0).." "..((config.UI_SCALE or 1) / 2.0).." "..((config.UI_SCALE or 1) / 2.0),
             active=(uimode_settings ~= 0),
             visibility=config.PERMEDIT
         },
@@ -725,9 +727,9 @@ function rebuildUI()
             childForceExpandHeight="false",
             visibility=config.PERMVIEW,
             position="0 0 -"..(tonumber(config.UI_HEIGHT) or 1.5) * 100,
-            rotation="-90 0 0",
+            rotation=(orient == "HORIZONTAL" and "0 0 180" or "-90 0 0"),
             active=(uimode_settings == 0),
-            scale="0.5 0.5 0.5",
+            scale=((config.UI_SCALE or 1) / 2.0).." "..((config.UI_SCALE or 1) / 2.0).." "..((config.UI_SCALE or 1) / 2.0),
             height=0,
             color="red",
             width=w,
