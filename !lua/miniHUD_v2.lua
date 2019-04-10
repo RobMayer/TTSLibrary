@@ -704,7 +704,7 @@ function rebuildUI()
             height="0",
             width=500,
             position="0 0 -"..(tonumber(config.UI_HEIGHT) or 1.5) * 100,
-            rotation=(orient == "HORIZONTAL" and "0 0 180" or "-90 0 0"),
+            rotation=(orient == "HORIZONTAL" and "0 0 0" or "-90 0 0"),
             scale=((config.UI_SCALE or 1) / 2.0).." "..((config.UI_SCALE or 1) / 2.0).." "..((config.UI_SCALE or 1) / 2.0),
             active=(uimode_settings ~= 0),
             visibility=config.PERMEDIT
@@ -727,7 +727,7 @@ function rebuildUI()
             childForceExpandHeight="false",
             visibility=config.PERMVIEW,
             position="0 0 -"..(tonumber(config.UI_HEIGHT) or 1.5) * 100,
-            rotation=(orient == "HORIZONTAL" and "0 0 180" or "-90 0 0"),
+            rotation=(orient == "HORIZONTAL" and "0 0 0" or "-90 0 0"),
             active=(uimode_settings == 0),
             scale=((config.UI_SCALE or 1) / 2.0).." "..((config.UI_SCALE or 1) / 2.0).." "..((config.UI_SCALE or 1) / 2.0),
             height=0,
