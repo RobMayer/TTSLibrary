@@ -1,5 +1,5 @@
 TRH_Class = "mini" --leave this be. it's how tokens recognize this as a valid target
-TRH_Version = "2.3"
+TRH_Version = "2.4"
 
 local const = { SPECTATOR = 1, PLAYER = 2, PROMOTED = 4, BLACK = 8, HOST = 16, ALL = 31, NOSPECTATOR = 30, LARGEBAR = 30, SMALLBAR=15 }
 
