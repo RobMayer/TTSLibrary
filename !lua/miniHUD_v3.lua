@@ -34,7 +34,7 @@ local flagOn = false
 function showArc()
 
 	if (config.MODULE_ARC) then
-	
+
 		local theScale = config.ARCS.SCALE
 		local theMesh = config.ARCS.MESH
 
@@ -239,8 +239,12 @@ function getBars()
     res = {}
     for i,v in pairs(state.bars) do
         local isBig = false
+        local hasText = false
         if (v[5] ~= nil) then
-            isBig = v[5]
+            hasText = v[5]
+        end
+        if (v[6] ~= nil) then
+            isBig = v[6]
         end
         res[i] = {
             name = v[1],
@@ -248,6 +252,7 @@ function getBars()
             current = v[3],
             maximum = v[4],
             big = isBig,
+            text = hasText
         }
     end
     return res
@@ -261,11 +266,18 @@ function setBar(data)
     local name = data.name or bar[1]
     local color = data.color or bar[2]
     local isBig = false
+    local hasText = false
     if (bar[5] ~= nil) then
         isBig = bar[5]
     end
     if (data.big ~= nil) then
         isBig = data.big
+    end
+    if (bar[6] ~= nil) then
+        hasText = bar[6]
+    end
+    if (data.text ~= nil) then
+        hasText = data.text
     end
 
     local per = (max == 0) and 0 or cur / max * 100
@@ -276,16 +288,20 @@ function setBar(data)
     self.UI.setAttribute("inp_bar_"..index.."_current", "value", cur)
     self.UI.setAttribute("inp_bar_"..index.."_max", "value", max)
     self.UI.setAttribute("inp_bar_"..index.."_big", "isOn", isBig)
+    self.UI.setAttribute("inp_bar_"..index.."_text", "isOn", hasText)
 
     self.UI.setAttribute("bar_"..index, "percentage", per)
     self.UI.setAttribute("bar_"..index, "fillImageColor", color)
     self.UI.setAttribute("bar_container_"..index, "minHeight", isBig and const.LARGEBAR or const.SMALLBAR)
+    self.UI.setAttribute("bar_text_"..index, "active", hasText)
+    self.UI.setAttribute("bar_text_"..index, "text", cur.." / "..max)
 
     state.bars[index][1] = name
     state.bars[index][2] = color
     state.bars[index][3] = cur
     state.bars[index][4] = max
     state.bars[index][5] = isBig
+    state.bars[index][6] = hasText
 
     if (controllerObj ~= nil) then controllerObj.call("updateMiniBars", { guid = self.guid }) end
 
@@ -427,6 +443,8 @@ function ui_setBar(player, val, id)
         setBar({index=index, maximum=val})
     elseif (key == "big") then
         setBar({index=index, big=(val == "True")})
+    elseif (key == "text") then
+        setBar({index=index, text=(val == "True")})
     end
 end
 function ui_adjBar(player, params)
@@ -534,7 +552,7 @@ function rebuildUI()
     local arcsOn = arcobj ~= nil
     local arcsScalable = false
 	if (arcsActive) then
-	
+
 		if (config.ARCS.MODE == 1) then --incremental
 			arcsScalable = true
 		end
@@ -545,7 +563,7 @@ function rebuildUI()
 
 	local w = math.max(200, (tonumber(config.UI_WIDTH) or 1) / ((config.UI_SCALE or 1)) * 200)
 	local orient = config.UI_ORIENT or "VERTICAL"
-	
+
     local mainBarList = {}
     local mainMarkerList = {}
 	local mainFlag = flagActive and ({tag="Panel", attributes={ id="flag_container", minHeight=(state.flag.height) * 100, active=(flagOn == true) }, children={ {tag="image", attributes={image="fl_image", width=((state.flag.width) * 100), color=state.flag.color or "#ffffff"}} } }) or {}
@@ -568,7 +586,7 @@ function rebuildUI()
                 children={
                     {
                         tag="TableLayout",
-                        attributes={columnWidths="0 100 60 60 30 30", childForceExpandHeight="false", cellBackgroundColor="transparent", autoCalculateHeight="true", padding="6 6 6 6"},
+                        attributes={columnWidths="0 100 60 60 30 30 30", childForceExpandHeight="false", cellBackgroundColor="transparent", autoCalculateHeight="true", padding="6 6 6 6"},
                         children={
                             {tag="Row", attributes={preferredHeight="30"}, children={
                                 {tag="Cell", children={{tag="Text", attributes={color="#cccccc", text="Name"}}}},
@@ -576,6 +594,7 @@ function rebuildUI()
                                 {tag="Cell", children={{tag="Text", attributes={color="#cccccc", text="Current"}}}},
                                 {tag="Cell", children={{tag="Text", attributes={color="#cccccc", text="Max"}}}},
                                 {tag="Cell", children={{tag="Text", attributes={color="#cccccc", text="Big"}}}},
+                                {tag="Cell", children={{tag="Text", attributes={color="#cccccc", text="Text"}}}},
                             }}
                         }
                     }
@@ -686,6 +705,7 @@ function rebuildUI()
                 {tag="button", attributes={preferredHeight="20", preferredWidth="20", flexibleWidth="0", image="ui_minus", colors="#ccccccff|#ffffffff|#404040ff|#808080ff", onClick="ui_adjBar("..i.."|-1)", visibility=config.PERMEDIT}},
                 {tag="panel", attributes={flexibleWidth="1", flexibleHeight="1"}, children={
                     {tag="progressbar", attributes={width="100%", height="100%", id="bar_"..i, color="#00000080", fillImageColor=bar[2], percentage=per, textColor="transparent"}},
+                    {tag="text", attributes={text=cur.." / "..max, active=bar[6] or false}}
                 }},
                 {tag="button", attributes={preferredHeight="20", preferredWidth="20", flexibleWidth="0", image="ui_plus", colors="#ccccccff|#ffffffff|#404040ff|#808080ff", onClick="ui_adjBar("..i.."|1)", visibility=config.PERMEDIT}},
             }
@@ -696,10 +716,11 @@ function rebuildUI()
             {tag="Cell", children={{tag="InputField", attributes={id="inp_bar_"..i.."_current", onEndEdit="ui_setBar", text=bar[3] or 10}}}},
             {tag="Cell", children={{tag="InputField", attributes={id="inp_bar_"..i.."_max", onEndEdit="ui_setBar", text=bar[4] or 10}}}},
             {tag="Cell", children={{tag="Toggle", attributes={id="inp_bar_"..i.."_big", onValueChanged="ui_setBar", isOn=bar[5] or false}}}},
+            {tag="Cell", children={{tag="Toggle", attributes={id="inp_bar_"..i.."_text", onValueChanged="ui_setBar", isOn=bar[6] or false}}}},
             {tag="Cell", children={{tag="Button", attributes={onClick="ui_removeBar("..i..")", image="ui_close", colors="#cccccc|#ffffff|#808080"}}}},
         }})
     end
-	
+
 
     local ui_settings = {
         tag="panel",
@@ -737,7 +758,7 @@ function rebuildUI()
     if (config.MODULE_FLAG) then
         table.insert(mainButtons, {tag="button", attributes={id="btn_flag_toggle", active=flagActive, height="30", width="30", rectAlignment="LowerRight", image="ui_flag", offsetXY="-80 0", colors="#ccccccff|#ffffffff|#404040ff|#808080ff", onClick="ui_flag", visibility=config.PERMEDIT}})
     end
-    
+
     table.insert(mainButtons, {tag="button", attributes={height="30", width="30", rectAlignment="LowerRight", image="ui_gear", offsetXY="-50 0", colors="#ccccccff|#ffffffff|#404040ff|#808080ff", onClick="uimode(1)", visibility=config.PERMEDIT}})
     table.insert(mainButtons, {tag="button", attributes={height="30", width="30", rectAlignment="LowerRight", image="ui_reload", offsetXY="-20 0", colors="#ccccccff|#ffffffff|#404040ff|#808080ff", onClick="rebuildUI", visibility=config.PERMVIEW}})
 
