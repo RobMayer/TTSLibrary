@@ -1,5 +1,5 @@
 TRH_Class = "mini" --leave this be. it's how tokens recognize this as a valid target
-TRH_Version = "3.0"
+TRH_Version = "3.1"
 
 local const = { SPECTATOR = 1, PLAYER = 2, PROMOTED = 4, BLACK = 8, HOST = 16, ALL = 31, NOSPECTATOR = 30, LARGEBAR = 30, SMALLBAR=15 }
 
@@ -7,28 +7,108 @@ config = {} --[[CONFIG GOES HERE]]
 
 local preloaded_assets = {}
 
+local state = {}
+local uimode_settings = 0
+local arclen = 1;
+local arcobj;
+local geoobj;
+local controllerObj
+local assetBuffer = {}
+local flagOn = false
+
+function onDestroy()
+	if (arcobj ~= nil) then
+		arcobj.destruct()
+	end
+	if (config.MODULE_GEOMETRY) then		
+		if (geoobj ~= nil) then
+			geoobj.destruct()
+		end
+	end
+end
+
 function onSave()
-    local save = {}
-    --add more hooks here if you need them, but leave this one here
-    miniutilSave(save)
+    local save = {}    
+	save.bars = state.bars
+    save.markers = state.markers
+    save.flag = state.flag
+    if (controllerObj ~= nil) then
+        save.controller = controllerObj.guid
+    end
+	
     return JSON.encode(save)
 end
 
 function onLoad(save)
     save = JSON.decode(save) or {}
-    --add more hooks here if you need them, but leave this one here
-    miniutilLoad(save)
+    state.bars = save.bars or {}
+    state.markers = save.markers or {}
+    state.flag = save.flag or {}
+    flagOn = state.flag.automode or false
+    if (save.controller ~= nil) then
+        local theObj = getObjectFromGUID(save.controller)
+        if (theObj ~= nil) then
+            if (theObj.call("verify", {guid=self.guid})) then
+                controllerObj = theObj
+            end
+        end
+    end
+	if (config.MODULE_GEOMETRY and (config.GEOMETRY.MESH ~= nil)) then
+		spawnGeometry()
+	end
+    rebuildAssets()
+    Wait.frames(rebuildUI, config.REFRESH or 3)
 end
 
--- DONT EDIT BELOW THIS LINE
+--Geometry
 
-local state = {}
-local uimode_settings = 0
-local arclen = 1;
-local arcobj;
-local controllerObj
-local assetBuffer = {}
-local flagOn = false
+function spawnGeometry()
+	if (geoobj ~= nil) then
+		geoobj.destruct()
+	end
+	geoobj = spawnObject({
+		type = "custom_model",
+		position = self.getPosition(),
+		rotation = self.getRotation(),
+		scale = self.getScale(),
+		mass = 0,
+		sound = false,
+		snap_to_grid = false,
+		callback_function = function(obj)
+			if (string.lower(config.GEOMETRY.COLOR or "INHERIT") == "inherit") then
+				obj.setColorTint(self.getColorTint())
+			else
+				local clr = string.sub(config.GEOMETRY.COLOR, 2, 7) or "ffffff"
+				if (string.len(clr) ~= 6) then clr = "ffffff" end
+				obj.setColorTint({
+					(tonumber(string.sub(clr, 1, 2),16) or 255) / 255,
+					(tonumber(string.sub(clr, 3, 4),16) or 255) / 255,
+					(tonumber(string.sub(clr, 5, 6),16) or 255) / 255,
+				})
+			end
+			obj.setVar("parent", self)
+			obj.setLuaScript("function onUpdate() if (parent ~= nil) then if (not parent.resting) then self.setPosition(parent.getPosition()) self.setRotation(parent.getRotation()) self.setScale(parent.setScale()) end else self.destruct() end end")
+			obj.mass = 0
+			obj.bounciness = 0
+			obj.drag = 0
+			obj.use_snap_points = false
+			obj.use_grid = false
+			obj.use_gravity = false
+			obj.auto_raise = false
+			obj.auto_raise = false
+			obj.sticky = false
+			obj.interactable = false
+		end,
+	})
+	geoobj.setCustomObject({
+		mesh = config.GEOMETRY.MESH,
+		diffuse = config.GEOMETRY.TEXTURE,
+		normal = config.GEOMETRY.NORMAL,
+		collider = "https://raw.githubusercontent.com/RobMayer/TTSLibrary/master/utility/null_COL.obj",
+		type = 0,
+		material = 1,
+	})
+end
 
 --Arc
 function showArc()
@@ -785,31 +865,4 @@ function rebuildUI()
         }
     }
     self.UI.setXmlTable({ui_main, ui_settings})
-end
-
-function miniutilSave(save)
-    save.bars = state.bars
-    save.markers = state.markers
-    save.flag = state.flag
-    if (controllerObj ~= nil) then
-        save.controller = controllerObj.guid
-    end
-    return save
-end
-
-function miniutilLoad(save)
-    state.bars = save.bars or {}
-    state.markers = save.markers or {}
-    state.flag = save.flag or {}
-    flagOn = state.flag.automode or false
-    if (save.controller ~= nil) then
-        local theObj = getObjectFromGUID(save.controller)
-        if (theObj ~= nil) then
-            if (theObj.call("verify", {guid=self.guid})) then
-                controllerObj = theObj
-            end
-        end
-    end
-    rebuildAssets()
-    Wait.frames(rebuildUI, config.REFRESH or 3)
 end
