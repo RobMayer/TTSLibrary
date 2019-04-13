@@ -87,7 +87,7 @@ function spawnGeometry()
 				})
 			end
 			obj.setVar("parent", self)
-			obj.setLuaScript("function onUpdate() if (parent ~= nil) then if (not parent.resting) then self.setPosition(parent.getPosition()) self.setRotation(parent.getRotation()) self.setScale(parent.setScale()) end else self.destruct() end end")
+			obj.setLuaScript("function onUpdate() if (parent ~= nil) then if (not parent.resting) then self.setPosition(parent.getPosition()) self.setRotation(parent.getRotation()) self.setScale(parent.getScale()) end else self.destruct() end end")
 			obj.mass = 0
 			obj.bounciness = 0
 			obj.drag = 0
