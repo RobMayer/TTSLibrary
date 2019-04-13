@@ -705,7 +705,7 @@ function rebuildUI()
                 {tag="button", attributes={preferredHeight="20", preferredWidth="20", flexibleWidth="0", image="ui_minus", colors="#ccccccff|#ffffffff|#404040ff|#808080ff", onClick="ui_adjBar("..i.."|-1)", visibility=config.PERMEDIT}},
                 {tag="panel", attributes={flexibleWidth="1", flexibleHeight="1"}, children={
                     {tag="progressbar", attributes={width="100%", height="100%", id="bar_"..i, color="#00000080", fillImageColor=bar[2], percentage=per, textColor="transparent"}},
-                    {tag="text", attributes={text=cur.." / "..max, active=bar[6] or false}}
+                    {tag="text", attributes={text=cur.." / "..max, active=bar[6] or false, color="#ffffff", fontStyle="Bold", outline="#000000", outlineSize="1 1"}}
                 }},
                 {tag="button", attributes={preferredHeight="20", preferredWidth="20", flexibleWidth="0", image="ui_plus", colors="#ccccccff|#ffffffff|#404040ff|#808080ff", onClick="ui_adjBar("..i.."|1)", visibility=config.PERMEDIT}},
             }
